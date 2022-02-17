@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerAlly : MonoBehaviour
+public class TriggerAlly : CollisionWithObjects
 {
-    private void OnTriggerEnter(Collider other)
+    public override void CollisionObjects(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            transform.SetParent(other.gameObject.transform);
-
-            other.gameObject.GetComponent<PlayerController>().SetListAlly(5);
+            other.gameObject.GetComponent<PlayerController>().SetListAlly(1);
 
             Destroy(this.gameObject);
         }

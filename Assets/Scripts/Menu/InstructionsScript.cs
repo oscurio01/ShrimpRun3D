@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class InstructionsScript : MonoBehaviour
 {
+    public static bool begin = false;
     bool onlyOnce = false;
     private void Awake()
     {
         Time.timeScale = 0f;
+        begin = false;
         onlyOnce = false;
     }
 
@@ -18,6 +20,7 @@ public class InstructionsScript : MonoBehaviour
             gameObject.SetActive(false);
             Time.timeScale = 1f;
             onlyOnce = true;
+            begin = true;
         }
     }
 }

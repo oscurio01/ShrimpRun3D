@@ -33,24 +33,11 @@ public class DataManager : MonoBehaviour
     public void SfxData(float value)
     {
         PlayerPrefs.SetFloat("SFXVolume", value);
-    }
-    public void CurrentHealth(int value)
-    {
-        PlayerPrefs.SetInt("heartsAmount", value);
     }    
-    public void MaxHealth(int value)
+    
+    public void MuteData(int value)
     {
-        PlayerPrefs.SetInt("maxHealth", value);
+        PlayerPrefs.SetInt("MuteVolume", value);
     }
 
-    public void Resolution(int reWidth, int reHeight)
-    {
-        PlayerPrefs.SetInt("resolutionWidth", reWidth);
-        PlayerPrefs.SetInt("resolutionHeight", reHeight);
-
-    }
-    public void Screenfull(bool fullScreen)
-    {
-        PlayerPrefs.SetInt("isFullScreen", fullScreen ? 1 : 0);
-    }
 }

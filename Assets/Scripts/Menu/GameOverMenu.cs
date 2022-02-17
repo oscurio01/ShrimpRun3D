@@ -7,14 +7,14 @@ using UnityEngine.SceneManagement;
 public class GameOverMenu : MonoBehaviour
 {
     public static bool gameOverIsON = false;
-    bool show = false;
+    bool onlyOnce = false;
 
     [SerializeField] GameObject gameOver;
-    [SerializeField] GameObject gameOverText;
 
     private void OnDisable()
     {
         gameOverIsON = false;
+        onlyOnce = false;
     }
     public void ActiveGameOver()
     {
@@ -25,18 +25,26 @@ public class GameOverMenu : MonoBehaviour
 
     public void ReplayLevel()
     {
-        Time.timeScale = 1f;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void QuitGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Menu");
+    }
+
     private void Start()
     {
         //gameOverText
     }
     private void Update()
     {
-        if (show)
+        if (gameOverIsON && onlyOnce == false)
         {
-            
+            ActiveGameOver();
+            onlyOnce = true;
         }
     }
 }

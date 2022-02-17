@@ -13,10 +13,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!GameIsPaused && !GameOverMenu.gameOverIsON)
-            {
-                Paused();
-            }
+            Paused();
         }
     }
 
@@ -35,11 +32,14 @@ public class PauseMenu : MonoBehaviour
         //Application.Quit();
     }
 
-    void Paused()
+    public void Paused()
     {
-        pausedMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        GameIsPaused = true;
+        if(!GameIsPaused && !GameOverMenu.gameOverIsON)
+        {
+            pausedMenuUI.SetActive(true);
+            Time.timeScale = 0f;
+            GameIsPaused = true;
+        }
     }
 
     public void OpenSettings()
