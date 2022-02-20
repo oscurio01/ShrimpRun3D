@@ -9,14 +9,6 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pausedMenuUI;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Paused();
-        }
-    }
-
     public void Resume()
     {
         pausedMenuUI.SetActive(false);
@@ -34,7 +26,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Paused()
     {
-        if(!GameIsPaused && !GameOverMenu.gameOverIsON)
+        if(!GameIsPaused && !GameOverMenu.gameOverIsON && !TriggerGoal.StageComplete)
         {
             pausedMenuUI.SetActive(true);
             Time.timeScale = 0f;

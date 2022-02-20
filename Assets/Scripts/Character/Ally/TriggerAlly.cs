@@ -8,7 +8,7 @@ public class TriggerAlly : CollisionWithObjects
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().SetListAlly(1);
+            other.gameObject.GetComponent<PlayerLevelController>().SetListAlly(1);
 
             Destroy(this.gameObject);
         }

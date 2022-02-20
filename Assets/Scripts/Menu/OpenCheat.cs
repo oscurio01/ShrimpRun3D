@@ -56,14 +56,14 @@ public class OpenCheat : MonoBehaviour
 
     public void InmortalPlayer()
     {
-        if(PlayerController.inmortal == false)
+        if(PlayerLevelController.inmortal == false)
         {
-            PlayerController.inmortal = true;
+            PlayerLevelController.inmortal = true;
             Debug.Log("Player is inmortal");
         }
         else
         {
-            PlayerController.inmortal = false;
+            PlayerLevelController.inmortal = false;
             Debug.Log("Player is not inmortal");
         }
     }
