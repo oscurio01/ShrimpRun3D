@@ -8,6 +8,7 @@ public class CameraBrain : MonoBehaviour
 
     Vector3 offset;
     public float acceleration = 500;
+    [SerializeField] private float pointOfReference;
 
     Rigidbody rb;
 
@@ -22,6 +23,6 @@ public class CameraBrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.MovePosition(Vector3.Lerp(transform.position, new Vector3(0, target.position.y, target.position.z) + offset, acceleration * Time.deltaTime));
+        rb.MovePosition(Vector3.Lerp(transform.position, new Vector3(pointOfReference, target.position.y, target.position.z) + offset, acceleration * Time.deltaTime));
     }
 }

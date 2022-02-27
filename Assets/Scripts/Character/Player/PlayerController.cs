@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float lateralSpeed;
 
-    float leftSide = -6.5f;
-    float rightSide = 6.5f;
+    float leftSide = -8f;
+    float rightSide = 8f;
 
     float m_Input;
     Vector3 velocity;
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 SetLateralMove(float leftOrRight)
     {
-        Vector3 newVelocity = new Vector3(-1 * Time.deltaTime * lateralSpeed * leftOrRight, rb.velocity.y, rb.velocity.z);
+        Vector3 newVelocity = new Vector3(-1 * lateralSpeed * leftOrRight * Time.deltaTime, rb.velocity.y, rb.velocity.z);
         return newVelocity;
     }
 

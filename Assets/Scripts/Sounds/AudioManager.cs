@@ -1,15 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
+[Serializable]
+public class AudioOrigin
+{
+    public string Name;
+    public AudioSource audio;
+}
+
 public class AudioManager : MonoBehaviour
 {
     public AudioMixer musicMixer, effectsMixer;
 
-    //public AudioSource[] Music;
-    public AudioSource[] Effects;
+    [SerializeField]
+    private List<AudioOrigin> audioList = new List<AudioOrigin>();
 
     public static AudioManager instance;
 
@@ -45,13 +53,6 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //MasterVolume();
-        //EffectsVolume();
-    }
-
     public void MasterVolume()
     {
         DataManager.instance.MusicData(masterSldr.value);
@@ -64,11 +65,14 @@ public class AudioManager : MonoBehaviour
         effectsMixer.SetFloat("effectsVolume", PlayerPrefs.GetFloat("SFXVolume"));
     }
 
-    public void PlayAudio(AudioSource audio)
+    public void PlayAudioSelected(string name)
     {
-        if (!audio.isPlaying)
+        for (int i = 0; i < audioList.Count; i++)
         {
-            audio.Play();
+            if(audioList[i].Name == name && !audioList[i].audio.isPlaying)
+            {
+                audioList[i].audio.Play();
+            }
         }
 
     }

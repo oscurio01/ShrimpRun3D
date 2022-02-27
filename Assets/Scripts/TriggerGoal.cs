@@ -20,7 +20,7 @@ public class TriggerGoal : CollisionWithObjects
 
     private void Update()
     {
-        if (StageComplete)
+        if (StageComplete && onlyOnce == false)
         {
             timer -= Time.deltaTime;
         }

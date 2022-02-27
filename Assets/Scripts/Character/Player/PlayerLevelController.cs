@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,27 +7,35 @@ public class PlayerLevelController : MonoBehaviour
 {
     public static bool inmortal = false;
 
+    public event Action<int> CallForce = delegate { };
+    public event Action<int, int> CallFollower = delegate { };
+
     [SerializeField] GameObject powerUpGameObject;
     Animator powerUpAnimator;
 
+    [SerializeField] GameObject[] powerUps;
+
     int totalShrimps;
+    int maxShrimps;
     int force;
 
     [SerializeField] List<PointerClass> pointerClass = new List<PointerClass>();
 
     private void OnEnable()
     {
-        OpenCheat.IncreaseShrimpsEvent += SetListAlly;
+        OpenCheat.IncreaseShrimpsEvent += AddFollower;
         OpenCheat.DecreaseShrimpsEvent += DecreaseShrimp;
     }
 
     private void OnDisable()
     {
-        OpenCheat.IncreaseShrimpsEvent -= SetListAlly;
+        OpenCheat.IncreaseShrimpsEvent -= AddFollower;
         OpenCheat.DecreaseShrimpsEvent -= DecreaseShrimp;
     }
     private void Awake()
     {
+        maxShrimps = 0;
+        totalShrimps = 0;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -36,10 +45,14 @@ public class PlayerLevelController : MonoBehaviour
                 p.pointer = transform.GetChild(i).gameObject;
                 p.ocuped = false;
 
+                maxShrimps += 1;
+
                 pointerClass.Add(p);
 
             }
         }
+
+        CallFollower(totalShrimps % (maxShrimps + 1), maxShrimps);
 
         powerUpAnimator = powerUpGameObject.GetComponent<Animator>();
     }
@@ -48,35 +61,54 @@ public class PlayerLevelController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            //for (int i = 0; i < pointerClass.Count; i++)
-            //{
-            //    Debug.Log("id: " + i + " Length " + pointerClass[i].ocuped);
-            //}
+            for (int i = 0; i < pointerClass.Count; i++)
+            {
+                if(pointerClass[i].ocuped) Debug.Log("id: " + i + " Length " + pointerClass[i].ocuped);
+            }
 
             Debug.Log(" Subscribers: " + totalShrimps + " Force " + force);
         }
+
+        for(int i = 0; i < pointerClass.Count; i++)
+        {
+            if(pointerClass[i].ocuped && !pointerClass[i].pointer.activeInHierarchy)
+            {
+                pointerClass[i].pointer.SetActive(true);
+            }
+        }
+        
     }
 
     #region Shrimps
-    public void SetListAlly(int ally)
+    public void AddFollower()
     {
-        totalShrimps += ally;
+        totalShrimps += 1;
 
-        SetPositionToAlly();
+        
 
-        if (totalShrimps % 19 == 1 && totalShrimps != 1)
+        SetPositionToFollower();
+
+        CallFollower(totalShrimps % (maxShrimps + 1), maxShrimps);
+
+        if (totalShrimps % (maxShrimps+1) == 0 && totalShrimps != 1)
         {
-            Debug.Log(" Subscribers: " + totalShrimps);
 
             DisappearAllShrimps();
 
             powerUpAnimator.SetTrigger("LevelUp");
 
+            AudioManager.instance.PlayAudioSelected("EffectOhYeah");
+
             force += 1;
+
+            if (force <= powerUps.Length) { if(powerUps[force] != null) powerUps[force].SetActive(true); Debug.Log("s " + force); }
+
+            CallForce(force);
         }
+
     }
 
-    void SetPositionToAlly()
+    void SetPositionToFollower()
     {
 
         for (int i = 0; i < pointerClass.Count; i++)
@@ -103,6 +135,8 @@ public class PlayerLevelController : MonoBehaviour
             return;
         }
 
+        CallFollower(totalShrimps % (maxShrimps + 1), maxShrimps);
+
         for (int i = 0; i < pointerClass.Count; i++)
         {
 
@@ -122,17 +156,24 @@ public class PlayerLevelController : MonoBehaviour
 
     public void DecreaseShrimp()
     {
+
         if (totalShrimps > 0 && !inmortal)
         {
             totalShrimps -= 1;
         }
         else
         {
+            if (totalShrimps <= 0 && force <= 0)
+            {
+                GameOverMenu.gameOverIsON = true;
+            }
+
             return;
         }
 
 
-        for (int i = pointerClass.Count - 1; i > -1; i--)
+
+        for (int i = pointerClass.Count - 1; i >= 0; i--)
         {
 
             if (pointerClass[i].ocuped == true)
@@ -143,6 +184,8 @@ public class PlayerLevelController : MonoBehaviour
                 break;
             }
         }
+
+        CallFollower(totalShrimps % (maxShrimps + 1), maxShrimps);
 
         DecreaseForce();
 
@@ -169,16 +212,27 @@ public class PlayerLevelController : MonoBehaviour
     {
         return totalShrimps;
     }
+    
+    public int GetMaxFollowersShrimps()
+    {
+        return maxShrimps;
+    }
 
     public void DecreaseForce()
     {
-        if (totalShrimps % 19 == 0 && totalShrimps != 0)
+        if (totalShrimps % maxShrimps == 0 && totalShrimps != 0)
         {
             powerUpAnimator.SetTrigger("LevelDown");
+
+            AudioManager.instance.PlayAudioSelected("EffectOhNo");
+
+            if (force <= powerUps.Length && powerUps[force] != null) powerUps[force].SetActive(false);
 
             force -= 1;
 
             Debug.Log("Force " + force);
+
+            CallForce(force);
 
             for (int i = 0; i < pointerClass.Count; i++)
             {
@@ -189,8 +243,11 @@ public class PlayerLevelController : MonoBehaviour
                     pointerClass[i].ocuped = true;
                 }
             }
+
         }
+
     }
+
     public int GetForce()
     {
         return force;

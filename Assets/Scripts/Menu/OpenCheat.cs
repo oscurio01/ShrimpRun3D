@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OpenCheat : MonoBehaviour
 {
-    public static event Action<int> IncreaseShrimpsEvent = delegate { };
+    public static event Action IncreaseShrimpsEvent = delegate { };
     public static event Action DecreaseShrimpsEvent = delegate { };
 
     [SerializeField] GameObject cheatButton;
@@ -75,7 +75,7 @@ public class OpenCheat : MonoBehaviour
 
     public void IncreaseShrimps()
     {
-        IncreaseShrimpsEvent(1);
+        IncreaseShrimpsEvent();
     }
 
 }

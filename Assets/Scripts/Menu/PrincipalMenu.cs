@@ -8,43 +8,51 @@ public class PrincipalMenu : MonoBehaviour
 
     public GameObject principalMenuUI;
 
+    public GameObject selectLevelMenuUI;
+
+    public GameObject howToPlayMenuUI;
+
+
     int level;
+
     private void Awake()
     {
         Time.timeScale = 1f;
     }
-    public void SelecLevels()
+    public void SelectLevels()
     {
-        SceneManager.LoadScene("IntroduceCinematic");
-
-
-        //DeleteAllInfoFromPlayer();
+        selectLevelMenuUI.SetActive(true);
     }
 
-    public void LoadGame()
+    public void CloseSelectLevels()
     {
-        int levelState = 1; //DBManager.GetLevelState();
-        if (levelState != -1)
-        {
-            DataManager.instance.StringActiveBetweenScenes = "LoadGame";
-            level = levelState;
-            SceneManager.LoadScene(level);
-        }
-        
-        
-        //SceneManager.LoadScene("Game1");
-        // The game will start, at the level where you left off
+        selectLevelMenuUI.SetActive(false);
+    }
 
-    }    
-
-    public void OpcionMenu()
+    public void HowToPlay()
     {
-        principalMenuUI.SetActive(false);
-        //OpcionsMenuUI.SetActive(true);
+        howToPlayMenuUI.SetActive(true);
+    }
 
-        SceneManager.LoadScene("Menu");
-        //Application.Quit();
-    }    
+    public void Credits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
+
+    public void EnterLevel1()
+    {
+        SceneManager.LoadScene("Level1");
+    }
+
+    public void EnterLevel2()
+    {
+        SceneManager.LoadScene("Level2");
+    }
+
+    public void EnterLevel3()
+    {
+        SceneManager.LoadScene("Level3");
+    }
     
     public void ExitGame()
     {
